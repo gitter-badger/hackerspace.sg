@@ -1,4 +1,5 @@
 newout:= output-$(shell date +%s)
+newoutlnk:= lnk-$(newout)
 oldout:= $(shell readlink www)
 
 all:
@@ -6,11 +7,12 @@ all:
 	node bin/newevents.js
 	punch g
 	mv output $(newout)
-	ln -sfT $(newout) www
-	test -d $(oldout) && rm -rf $(oldout)
+	ln -sf $(newout) $(newoutlnk)
+	mv -T $(newoutlnk) www
+	test -d $(outout) && rm -rf $(oldout)
 
 clean:
-	rm -rf output* www
+	rm -rf www output*
 
 deploy: all
 	# Publishing to http://hackerspace.sg.s3-website-ap-southeast-1.amazonaws.com/
